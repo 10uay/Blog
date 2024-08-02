@@ -20,7 +20,9 @@ export default function CommentSection({ postId }) {
     useEffect(() => {
         const getComments = async () => {
             try {
-                const res = await fetch(`/api/comment/get-posts-comment/${postId}`)
+                const res = await fetch(
+                  `https://blog-louay-api.onrender.com/api/comment/get-posts-comment/${postId}`
+                );
                 if (res.ok) {
                     const data = await res.json()
                     setComments(data)
@@ -38,17 +40,20 @@ export default function CommentSection({ postId }) {
             return
         }
         try {
-            const res = await fetch('/api/comment/create', {
-                method: 'POST',
+            const res = await fetch(
+              "https://blog-louay-api.onrender.com/api/comment/create",
+              {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    content: comment,
-                    postId,
-                    userId: currentUser._id,
+                  content: comment,
+                  postId,
+                  userId: currentUser._id,
                 }),
-            })
+              }
+            );
             const data = await res.json()
             if (res.ok) {
                 setComment('')
@@ -66,9 +71,12 @@ export default function CommentSection({ postId }) {
                 navigate('/sign-in')
                 return
             }
-            const res = await fetch(`/api/comment/like-comment/${commentId}`, {
-                method: 'PUT',
-            })
+            const res = await fetch(
+              `https://blog-louay-api.onrender.com/api/comment/like-comment/${commentId}`,
+              {
+                method: "PUT",
+              }
+            );
             if (res.ok) {
                 const data = await res.json()
                 setComments(
@@ -103,9 +111,12 @@ export default function CommentSection({ postId }) {
             navigate('/sign-in')
             return;
         }
-        const res = await fetch(`/api/comment/delete-comment/${commentId}`, {
-            method: 'DELETE',
-        })
+        const res = await fetch(
+          `https://blog-louay-api.onrender.com/api/comment/delete-comment/${commentId}`,
+          {
+            method: "DELETE",
+          }
+        );
         if (res.ok) {
             // const data = await res.json()
             setComments(comments.filter((comment) => comment._id !== commentId))

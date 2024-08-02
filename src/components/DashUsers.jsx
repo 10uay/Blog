@@ -18,10 +18,13 @@ export default function DashUsers() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch('/api/user/get-users', {
-          method: 'GET',
-          headers: { 'Content-Type' : 'application/json' }
-        })
+        const res = await fetch(
+          "https://blog-louay-api.onrender.com/api/user/get-users",
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         const data = await res.json()
 
         if (res.ok) {
@@ -38,10 +41,13 @@ export default function DashUsers() {
   const handleShowMore  = async () => {
     const startIndex = users.length
     try {
-      const res = await fetch(`/api/user/get-users?startIndex=${startIndex}`, {
-          method: 'GET',
-          headers: { 'Content-Type' : 'application/json' }
-        })
+      const res = await fetch(
+        `https://blog-louay-api.onrender.com/api/user/get-users?startIndex=${startIndex}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
         const data = await res.json()
 
         if (res.ok) {
@@ -55,9 +61,12 @@ export default function DashUsers() {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`/api/user/delete/${selectedUserId}`, {
-        method: 'DELETE'
-      })
+      const res = await fetch(
+        `https://blog-louay-api.onrender.com/api/user/delete/${selectedUserId}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json()
 
       if (!res.ok) {

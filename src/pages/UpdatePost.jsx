@@ -58,10 +58,13 @@ export default function UpdatePost() {
     useEffect(() => {
         try {
         const fetchPost = async () => {
-            const res = await fetch(`/api/post/get-posts?postId=${postId}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            })
+            const res = await fetch(
+              `https://blog-louay-api.onrender.com/api/post/get-posts?postId=${postId}`,
+              {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+              }
+            );
             const data = await res.json()
             if (!res.ok) {
                 console.log(data.message)
@@ -89,13 +92,16 @@ export default function UpdatePost() {
         }
 
         try {
-            const res = await fetch(`/api/post/update-post/${postId}/${currentUser._id}`, {
-                method: 'PUT',
+            const res = await fetch(
+              `https://blog-louay-api.onrender.com/api/post/update-post/${postId}/${currentUser._id}`,
+              {
+                method: "PUT",
                 headers: {
-                'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify(formData),
-            })
+              }
+            );
             const data = await res.json();
             
             if (!res.ok) {

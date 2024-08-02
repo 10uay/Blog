@@ -19,17 +19,20 @@ export default function OAuth() {
     console.log('before try');
     try {
       console.log('after try');
-      const res = await fetch('/api/auth/google', {
-          method: 'POST',
+      const res = await fetch(
+        "https://blog-louay-api.onrender.com/api/auth/google",
+        {
+          method: "POST",
           headers: {
-              'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
-              username: result.user.displayName,
-              email: result.user.email,
-              photoProfile: result.user.photoURL
-          })
-      })
+            username: result.user.displayName,
+            email: result.user.email,
+            photoProfile: result.user.photoURL,
+          }),
+        }
+      );
       console.log(res);
       const data = await res.json()
       dispatch(signInSuccess(data))

@@ -15,7 +15,9 @@ export default function DashComments() {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/comment/get-comments`)
+        const res = await fetch(
+          `https://blog-louay-api.onrender.com/api/comment/get-comments`
+        );
         const data = await res.json()
         if (res.ok) {
           setComments(data.comments)
@@ -36,8 +38,8 @@ export default function DashComments() {
     const startIndex = comments.length
     try {
       const res = await fetch(
-        `/api/comment/get-comments?startIndex=${startIndex}`
-      )
+        `https://blog-louay-api.onrender.com/api/comment/get-comments?startIndex=${startIndex}`
+      );
       const data = await res.json()
       if (res.ok) {
         setComments((prev) => [...prev, ...data.comments])
@@ -54,11 +56,11 @@ export default function DashComments() {
     setShowModal(false)
     try {
       const res = await fetch(
-        `/api/comment/delete-comment/${commentId}`,
+        `https://blog-louay-api.onrender.com/api/comment/delete-comment/${commentId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
         }
-      )
+      );
       const data = await res.json()
       if (res.ok) {
         setComments((prev) =>

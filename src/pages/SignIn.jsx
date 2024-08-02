@@ -6,7 +6,7 @@ import {
   Alert
 } from 'flowbite-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import OAuth from '../components/OAuth'
 import {
@@ -20,37 +20,61 @@ export default function SignIn() {
   const [formData, setFormData] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { loading, error } = useSelector((state) => state.user);
-  
+  const { error } = useSelector((state) => state.user);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
+  
+  useEffect(() => {
+    error && setErrorMessage(error.message);
+  }, [error]);
+  
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]:e.target.value})
   }
 
   const handleSubmit = async (ev) => {
-    ev.preventDefault()    
+    ev.preventDefault()
+    
+    setLoading(false)
 
     if (!formData.email || !formData.password) {
       return dispatch(signInFailure('Please fill out all fields.'))
     }
 
-    try {
-      dispatch(signInStart());
-      const res = await fetch(`/api/auth/sign-in`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json()
-      if (data.success === false) dispatch(signInFailure(data))
+      try {
+        setErrorMessage('')
+        dispatch(signInStart());
+        setLoading(true);
+        const res = await fetch(
+          `https://blog-louay-api.onrender.com/api/auth/sign-in`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData),
+          }
+        );
+        const data = await res.json()
+        if (data.success === false) dispatch(signInFailure(data))
+        
+        setLoading(false);
+        dispatch(signInFailure(res.statusText));
 
-      if (res.ok) {
-        dispatch(signInSuccess(data))
-        navigate('/')
+        if (res.ok) {
+          setLoading(false);
+          dispatch(signInSuccess(data))
+          navigate('/')
+        }
+        if (res.statusText === 'Bad Request') {
+          throw new Error("Invalid password!");
+        }
+        if (res.statusText === "Not Found") {
+          throw new Error("User not found");
+        }
+      } catch (error) {
+        setLoading(false);
+        dispatch(signInFailure(error));
       }
-    } catch (error) {
-      dispatch(signInFailure(error));
-    }
   }
 
   return (
@@ -119,7 +143,7 @@ export default function SignIn() {
           </div>
           {error && (
             <Alert className="mt-5" color="failure">
-              {error}
+              {errorMessage}
             </Alert>
           )}
         </div>

@@ -6,7 +6,7 @@ import {
   Alert
 } from 'flowbite-react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import OAuth from '../components/OAuth'
 
 
@@ -16,6 +16,9 @@ export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState(null)
   const navigate = useNavigate()
   
+  // useEffect(() => {
+  //   console.log(errorMessage);
+  // },[])
 
   const handleChange = (e) => {
     setFormData({...formData, [e.target.id]:e.target.value})
@@ -30,20 +33,24 @@ export default function SignUp() {
     }
     setLoading(true)
     try {
-      const res = await fetch('/api/auth/sign-up', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+      const res = await fetch(
+        "https://blog-louay-api.onrender.com/api/auth/sign-up",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        body: JSON.stringify(formData)
-      })
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json()
       
       if (data.message.includes("email")) setErrorMessage('Your email is alrady taken!')
       if (res.ok) navigate('/sign-in')
     }
     catch (error) {
-      setErrorMessage(error)
+      setErrorMessage(error.message)
+      console.log('error sign-up');
     }
     setLoading(false)
   }

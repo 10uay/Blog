@@ -23,7 +23,7 @@ export default function Header() {
 
   const handleSignOut = async () => {
     try {
-      await fetch('/api/auth/sign-out')
+      await fetch("https://blog-louay-api.onrender.com/api/auth/sign-out");
       dispatch(signOut())
     } catch (error) {
       console.log(error)

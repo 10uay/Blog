@@ -20,10 +20,13 @@ export default function DashPosts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`/api/post/get-posts?userId=${currentUser._id}`, {
-          method: 'GET',
-          headers: { 'Content-Type' : 'application/json' }
-        })
+        const res = await fetch(
+          `https://blog-louay-api.onrender.com/api/post/get-posts?userId=${currentUser._id}`,
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         const data = await res.json()
 
         if (res.ok) {
@@ -39,10 +42,13 @@ export default function DashPosts() {
   const handleShowMore  = async () => {
     const startIndex = userPosts.length
     try {
-      const res = await fetch(`/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`, {
-          method: 'GET',
-          headers: { 'Content-Type' : 'application/json' }
-        })
+      const res = await fetch(
+        `https://blog-louay-api.onrender.com/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
         const data = await res.json()
 
         if (res.ok) {
@@ -56,9 +62,12 @@ export default function DashPosts() {
 
   const handleDelete = async () => {
     try {
-      const res = await fetch(`/api/post/delete-post/${selectedPostId}/${currentUser._id}`, {
-        method: 'DELETE'
-      })
+      const res = await fetch(
+        `https://blog-louay-api.onrender.com/api/post/delete-post/${selectedPostId}/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      );
       const data = await res.json()
 
       if (!res.ok) {

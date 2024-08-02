@@ -26,7 +26,9 @@ export default function DashComp() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch('/api/user/get-users?limit=5')
+        const res = await fetch(
+          "https://blog-louay-api.onrender.com/api/user/get-users?limit=5"
+        );
         const data = await res.json()
         if (res.ok) {
           setUsers(data.users)
@@ -40,7 +42,9 @@ export default function DashComp() {
 
     const fetchPosts = async () => {
       try {
-        const res = await fetch('/api/post/get-posts?limit=5')
+        const res = await fetch(
+          "https://blog-louay-api.onrender.com/api/post/get-posts?limit=5"
+        );
         const data = await res.json()
         if (res.ok) {
           setPosts(data.posts)
@@ -54,7 +58,9 @@ export default function DashComp() {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch('/api/comment/get-comments?limit=5')
+        const res = await fetch(
+          "https://blog-louay-api.onrender.com/api/comment/get-comments?limit=5"
+        );
         const data = await res.json()
         if (res.ok) {
           setComments(data.comments)

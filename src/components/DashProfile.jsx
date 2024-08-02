@@ -75,13 +75,16 @@ export default function DashProfile() {
     
     try {
       dispatch(updateStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
+      const res = await fetch(
+        `https://blog-louay-api.onrender.com/api/user/update/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await res.json();
       
       if (!res.ok) {
@@ -98,12 +101,15 @@ export default function DashProfile() {
 
   const handleDeleteAccount = async () => {
       dispatch(deleteUserStart())
-      await fetch(`/api/user/delete/${currentUser._id}`, {
-        method: 'DELETE',
-      })
-        .then(res => res.json())
+      await fetch(
+        `https://blog-louay-api.onrender.com/api/user/delete/${currentUser._id}`,
+        {
+          method: "DELETE",
+        }
+      )
+        .then((res) => res.json())
         .then(() => dispatch(deleteUserSuccess()))
-        .catch(error => dispatch(deleteUserFailure(error)))
+        .catch((error) => dispatch(deleteUserFailure(error)));
   }
 
   useEffect(() => {

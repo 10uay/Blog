@@ -11,7 +11,9 @@ export default function Home() {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const res = await fetch("/api/post/get-posts?limit=6");
+      const res = await fetch(
+        "https://blog-louay-api.onrender.com/api/post/get-posts?limit=6"
+      );
       const data = await res.json();
       setPosts(data.posts);
     };

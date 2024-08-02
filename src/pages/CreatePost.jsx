@@ -62,13 +62,16 @@ export default function CreatePost() {
         }
 
         try {
-            const res = await fetch('/api/post/create', {
-                method: 'POST',
+            const res = await fetch(
+              "https://blog-louay-api.onrender.com/api/post/create",
+              {
+                method: "POST",
                 headers: {
-                'Content-Type': 'application/json',
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify(formData),
-            })
+              }
+            );
             const data = await res.json();
             
             if (!res.ok) {
