@@ -17,7 +17,11 @@ export default function PostPage() {
       try {
         setLoading(true)
         const res = await fetch(
-          `https://blog-louay-api.onrender.com/api/post/get-posts?slug=${slug}`
+          `https://blog-louay-api.onrender.com/api/post/get-posts?slug=${slug}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (!res.ok) {
@@ -42,7 +46,11 @@ export default function PostPage() {
     try {
       const fetchRecentPosts = async () => {
         const res = await fetch(
-          `https://blog-louay-api.onrender.com/api/post/get-posts?limit=3`
+          `https://blog-louay-api.onrender.com/api/post/get-posts?limit=3`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (res.ok) {

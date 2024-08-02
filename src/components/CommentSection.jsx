@@ -21,7 +21,11 @@ export default function CommentSection({ postId }) {
         const getComments = async () => {
             try {
                 const res = await fetch(
-                  `https://blog-louay-api.onrender.com/api/comment/get-posts-comment/${postId}`
+                  `https://blog-louay-api.onrender.com/api/comment/get-posts-comment/${postId}`,
+                  {
+                    method: "GET",
+                    credentials: "include",
+                  }
                 );
                 if (res.ok) {
                     const data = await res.json()
@@ -47,6 +51,7 @@ export default function CommentSection({ postId }) {
                 headers: {
                   "Content-Type": "application/json",
                 },
+                credentials: "include",
                 body: JSON.stringify({
                   content: comment,
                   postId,
@@ -75,6 +80,7 @@ export default function CommentSection({ postId }) {
               `https://blog-louay-api.onrender.com/api/comment/like-comment/${commentId}`,
               {
                 method: "PUT",
+                credentials: "include",
               }
             );
             if (res.ok) {
@@ -115,6 +121,7 @@ export default function CommentSection({ postId }) {
           `https://blog-louay-api.onrender.com/api/comment/delete-comment/${commentId}`,
           {
             method: "DELETE",
+            credentials: "include",
           }
         );
         if (res.ok) {

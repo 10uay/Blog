@@ -27,7 +27,11 @@ export default function DashComp() {
     const fetchUsers = async () => {
       try {
         const res = await fetch(
-          "https://blog-louay-api.onrender.com/api/user/get-users?limit=5"
+          "https://blog-louay-api.onrender.com/api/user/get-users?limit=5",
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (res.ok) {
@@ -43,7 +47,11 @@ export default function DashComp() {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          "https://blog-louay-api.onrender.com/api/post/get-posts?limit=5"
+          "https://blog-louay-api.onrender.com/api/post/get-posts?limit=5",
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (res.ok) {
@@ -59,7 +67,11 @@ export default function DashComp() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          "https://blog-louay-api.onrender.com/api/comment/get-comments?limit=5"
+          "https://blog-louay-api.onrender.com/api/comment/get-comments?limit=5",
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (res.ok) {

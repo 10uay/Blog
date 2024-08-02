@@ -1,78 +1,84 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { useState, useRef, useEffect } from 'react'
-import { app } from '../firebase.config.js'
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useRef, useEffect } from "react";
+import { app } from "../firebase.config.js";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import {
   updateStart,
   updateSuccess,
   updateFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
-} from '../redux/user/userSlice.js'
-import { Alert, Button } from 'flowbite-react'
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-
+  deleteUserFailure,
+} from "../redux/user/userSlice.js";
+import { Alert, Button } from "flowbite-react";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export default function DashProfile() {
-  const { currentUser, error, loading } = useSelector(state => state.user)
-  const [formData, setFormData] = useState({})
-  const [image, setImage] = useState()
-  const [imagePercent, setImagePercent] = useState()
-  const [imageError, setImageError] = useState(false)
-  const [uploadingImg, setUploadingImg] = useState(false)
-  const [emptyFields, setEmptyFields] = useState(false)
-  const [uploadedSuccess, setUploadedSuccess] = useState(false)
-  const fileRef = useRef(null)
-  const dispatch = useDispatch()
+  const { currentUser, error, loading } = useSelector((state) => state.user);
+  const [formData, setFormData] = useState({});
+  const [image, setImage] = useState();
+  const [imagePercent, setImagePercent] = useState();
+  const [imageError, setImageError] = useState(false);
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const [emptyFields, setEmptyFields] = useState(false);
+  const [uploadedSuccess, setUploadedSuccess] = useState(false);
+  const fileRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handlechange = (ev) => {
-    setFormData({...formData, [ev.target.id]:ev.target.value})
-  }
+    setFormData({ ...formData, [ev.target.id]: ev.target.value });
+  };
 
   const handleFileUpload = async (image) => {
-    const storage = getStorage(app)
-    const imageName = new Date().getTime() + image.name
-    const storageRef = ref(storage, imageName)
-    const uploadTask = uploadBytesResumable(storageRef, image)
+    const storage = getStorage(app);
+    const imageName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, imageName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
     uploadTask.on(
-      'state_changed',
+      "state_changed",
       (snapshot) => {
-        setUploadingImg(true)
-        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        setImagePercent(Math.round(progress))
+        setUploadingImg(true);
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setImagePercent(Math.round(progress));
       },
       (error) => {
         if (error) {
-          setImageError(true)
-          setUploadingImg(false)
+          setImageError(true);
+          setUploadingImg(false);
         }
       },
       () => {
-        setUploadingImg(false)
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => setFormData({...formData, photoProfile:downloadURL}))
+        setUploadingImg(false);
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData({ ...formData, photoProfile: downloadURL })
+        );
       }
-    )
-    
+    );
+
     console.log(uploadingImg);
-  }
+  };
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
-    setEmptyFields(false)
-    setUploadedSuccess(false)
+    setEmptyFields(false);
+    setUploadedSuccess(false);
 
     if (Object.keys(formData).length === 0) {
-      setEmptyFields(true)
+      setEmptyFields(true);
       return;
     }
     if (uploadingImg) {
       return;
     }
-    
+
     try {
       dispatch(updateStart());
       const res = await fetch(
@@ -82,40 +88,42 @@ export default function DashProfile() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
+
           body: JSON.stringify(formData),
         }
       );
       const data = await res.json();
-      
+
       if (!res.ok) {
-        console.log(data)
-        dispatch(updateFailure(data))
+        console.log(data);
+        dispatch(updateFailure(data));
       } else {
-        setUploadedSuccess(true)
+        setUploadedSuccess(true);
         dispatch(updateSuccess(data));
       }
     } catch (error) {
       dispatch(updateFailure(error));
     }
-  }
+  };
 
   const handleDeleteAccount = async () => {
-      dispatch(deleteUserStart())
-      await fetch(
-        `https://blog-louay-api.onrender.com/api/user/delete/${currentUser._id}`,
-        {
-          method: "DELETE",
-        }
-      )
-        .then((res) => res.json())
-        .then(() => dispatch(deleteUserSuccess()))
-        .catch((error) => dispatch(deleteUserFailure(error)));
-  }
+    dispatch(deleteUserStart());
+    await fetch(
+      `https://blog-louay-api.onrender.com/api/user/delete/${currentUser._id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    )
+      .then((res) => res.json())
+      .then(() => dispatch(deleteUserSuccess()))
+      .catch((error) => dispatch(deleteUserFailure(error)));
+  };
 
   useEffect(() => {
-    if (image) handleFileUpload(image)
-  }, [image])
-
+    if (image) handleFileUpload(image);
+  }, [image]);
 
   return (
     <>
@@ -340,4 +348,3 @@ export default function DashProfile() {
     </>
   );
 }
-

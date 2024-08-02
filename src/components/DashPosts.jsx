@@ -1,19 +1,18 @@
-import { Table, Button, Modal } from 'flowbite-react'
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Table, Button, Modal } from "flowbite-react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useNavigate } from 'react-router-dom'
-
+import { useNavigate } from "react-router-dom";
 
 export default function DashPosts() {
-  const { currentUser } = useSelector((state) => state.user)
-  const [userPosts, setUserPosts] = useState([])
-  const [showMore, setShowMore] = useState(true)
-  const [selectedPostId, setSelectedPostId] = useState('')
-  const [openModal, setOpenModal] = useState(false)
-  const navigate = useNavigate()
+  const { currentUser } = useSelector((state) => state.user);
+  const [userPosts, setUserPosts] = useState([]);
+  const [showMore, setShowMore] = useState(true);
+  const [selectedPostId, setSelectedPostId] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   // console.log(userPosts);
 
@@ -25,40 +24,44 @@ export default function DashPosts() {
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
           }
         );
-        const data = await res.json()
+        const data = await res.json();
 
         if (res.ok) {
-          setUserPosts(data.posts)
+          setUserPosts(data.posts);
         }
       } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    }
-    if (currentUser.isAdmin) fetchPosts()
-  }, [currentUser._id])
-  
-  const handleShowMore  = async () => {
-    const startIndex = userPosts.length
+    };
+    if (currentUser.isAdmin) fetchPosts();
+  }, [currentUser._id]);
+
+  const handleShowMore = async () => {
+    const startIndex = userPosts.length;
     try {
       const res = await fetch(
         `https://blog-louay-api.onrender.com/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         }
       );
-        const data = await res.json()
+      const data = await res.json();
 
-        if (res.ok) {
-          setUserPosts((prev) => [...prev, ...data.posts])
-          data.totalPosts === userPosts.length ? setShowMore(false) : setShowMore(true)
-        }
+      if (res.ok) {
+        setUserPosts((prev) => [...prev, ...data.posts]);
+        data.totalPosts === userPosts.length
+          ? setShowMore(false)
+          : setShowMore(true);
+      }
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const handleDelete = async () => {
     try {
@@ -66,27 +69,28 @@ export default function DashPosts() {
         `https://blog-louay-api.onrender.com/api/post/delete-post/${selectedPostId}/${currentUser._id}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        console.log(data.message)
+        console.log(data.message);
       } else {
-        setUserPosts(prev => prev.filter(singlePost => singlePost._id !== selectedPostId))
+        setUserPosts((prev) =>
+          prev.filter((singlePost) => singlePost._id !== selectedPostId)
+        );
       }
-
     } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
-  <>
-    {
-      currentUser.isAdmin && (
-        <div className='table-auto overflow-x-auto md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-          <Table hoverable className='shadow-md'>
+    <>
+      {currentUser.isAdmin && (
+        <div className="table-auto overflow-x-auto md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+          <Table hoverable className="shadow-md">
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>Post image</Table.HeadCell>
@@ -97,65 +101,66 @@ export default function DashPosts() {
             </Table.Head>
 
             <Table.Body>
-              {
-                userPosts.map((post) => (
-                  <Table.Row key={post._id}>
-                    <Table.Cell>
-                      {new Date(post.updatedAt).toLocaleDateString()}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <img
-                        src={post.image}
-                        alt={post.title}
-                        className='w-20 h-10 object-cover bg-gray-500'
-                      />
-                    </Table.Cell>
-                    <Table.Cell
-                      onClick={() => navigate(`/post/${post.slug}`)}
-                      className='cursor-pointer'
+              {userPosts.map((post) => (
+                <Table.Row key={post._id}>
+                  <Table.Cell>
+                    {new Date(post.updatedAt).toLocaleDateString()}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-20 h-10 object-cover bg-gray-500"
+                    />
+                  </Table.Cell>
+                  <Table.Cell
+                    onClick={() => navigate(`/post/${post.slug}`)}
+                    className="cursor-pointer"
+                  >
+                    {post.title}
+                  </Table.Cell>
+                  <Table.Cell>{post.category}</Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      className="font-medium hover:underline text-red-700"
+                      color="red"
+                      onClick={() => {
+                        setSelectedPostId(post._id);
+                        setOpenModal(true);
+                      }}
                     >
-                      {post.title}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {post.category}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        className='font-medium hover:underline text-red-700'
-                        color='red'
-                        onClick={() => {
-                          setSelectedPostId(post._id)
-                          setOpenModal(true)
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Button
-                        as={Link}
-                        to={`/update-post/${post._id}`}
-                        className='font-medium hover:underline'
-                      >
-                        Edit
-                      </Button>
-                    </Table.Cell>
-                  </Table.Row>
-                ))
-              }
+                      Delete
+                    </Button>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Button
+                      as={Link}
+                      to={`/update-post/${post._id}`}
+                      className="font-medium hover:underline"
+                    >
+                      Edit
+                    </Button>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
             </Table.Body>
           </Table>
         </div>
-        )}
+      )}
       {showMore && (
         <button
           onClick={handleShowMore}
-          className='w-full text-teal-500 self-center text-sm py-7'
+          className="w-full text-teal-500 self-center text-sm py-7"
         >
           Show more
         </button>
       )}
-      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup >
+      <Modal
+        show={openModal}
+        size="md"
+        onClose={() => setOpenModal(false)}
+        popup
+      >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
@@ -164,10 +169,13 @@ export default function DashPosts() {
               Are you sure you want to delete this post?
             </h3>
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={() => {
-                handleDelete()
-                setOpenModal(false)
-              }}>
+              <Button
+                color="failure"
+                onClick={() => {
+                  handleDelete();
+                  setOpenModal(false);
+                }}
+              >
                 {"Yes, I'm sure"}
               </Button>
               <Button color="gray" onClick={() => setOpenModal(false)}>
@@ -177,6 +185,6 @@ export default function DashPosts() {
           </div>
         </Modal.Body>
       </Modal>
-  </>
-  )
+    </>
+  );
 }

@@ -16,7 +16,11 @@ export default function DashComments() {
     const fetchComments = async () => {
       try {
         const res = await fetch(
-          `https://blog-louay-api.onrender.com/api/comment/get-comments`
+          `https://blog-louay-api.onrender.com/api/comment/get-comments`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await res.json()
         if (res.ok) {
@@ -38,7 +42,11 @@ export default function DashComments() {
     const startIndex = comments.length
     try {
       const res = await fetch(
-        `https://blog-louay-api.onrender.com/api/comment/get-comments?startIndex=${startIndex}`
+        `https://blog-louay-api.onrender.com/api/comment/get-comments?startIndex=${startIndex}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
       );
       const data = await res.json()
       if (res.ok) {
@@ -59,6 +67,7 @@ export default function DashComments() {
         `https://blog-louay-api.onrender.com/api/comment/delete-comment/${commentId}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
       const data = await res.json()
